@@ -3,12 +3,14 @@ package com.attornatus.avaliacaodesenvolvedor.services;
 import com.attornatus.avaliacaodesenvolvedor.exceptions.NotFoundException;
 import com.attornatus.avaliacaodesenvolvedor.models.Endereco;
 import com.attornatus.avaliacaodesenvolvedor.models.Pessoa;
-import com.attornatus.avaliacaodesenvolvedor.models.form.PessoaForm;
+import com.attornatus.avaliacaodesenvolvedor.controllers.form.PessoaForm;
 import com.attornatus.avaliacaodesenvolvedor.repositories.PessoaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+
+import static com.attornatus.avaliacaodesenvolvedor.utils.PessoaUtils.buscaPessoaById;
 
 @Service
 public class PessoaService {
@@ -41,22 +43,14 @@ public class PessoaService {
      * @return
      */
     public String alteraPessoa(PessoaForm pessoaForm) {
-        Optional<Pessoa> pessoaExistente = buscaPessoaById(pessoaForm.getId());
+        Optional<Pessoa> pessoaExistente = buscaPessoaById(pessoaForm.getId(), pessoaRepository);
 
         Pessoa pessoa = pessoaForm.atualizar(pessoaForm.getId(), pessoaRepository);
         return "Pessoa alterada com sucesso";
     }
 
-
-    /**
-     * Esse método retorna a Pessoa conforme o ID informado.
-     *
-     * @param id
-     * @return
-     */
-    public Optional<Pessoa> buscaPessoaById(Long id) {
-        return Optional.ofNullable(pessoaRepository.
-                findById(id).orElseThrow(() -> new NotFoundException("Pessoa não encontrada")));
+    public Pessoa buscaPorId(Long id) {
+        return buscaPessoaById(id, pessoaRepository).get();
     }
 
     public List<Pessoa> buscaTodasAsPessoas() {
@@ -75,7 +69,7 @@ public class PessoaService {
      * @return
      */
     public List<Endereco> buscaPessoaEndereco(Long id) {
-        Optional<Pessoa> pessoa = buscaPessoaById(id);
+        Optional<Pessoa> pessoa = buscaPessoaById(id, pessoaRepository);
         return pessoa.map(Pessoa::getEndereco).orElse(null);
     }
 
@@ -87,7 +81,7 @@ public class PessoaService {
      * @return
      */
     public String defineEnderecoPrincipal(Long id, Long idEndereco) {
-        Pessoa pessoa = buscaPessoaById(id).get();
+        Pessoa pessoa = buscaPessoaById(id, pessoaRepository).get();
 
         pessoa.getEndereco().forEach(c -> c.setEnderecoPrincipal(false));
 

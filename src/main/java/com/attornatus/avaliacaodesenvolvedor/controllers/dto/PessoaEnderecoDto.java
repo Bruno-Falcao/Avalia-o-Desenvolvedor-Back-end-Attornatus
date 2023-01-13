@@ -1,4 +1,4 @@
-package com.attornatus.avaliacaodesenvolvedor.models.dto;
+package com.attornatus.avaliacaodesenvolvedor.controllers.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

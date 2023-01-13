@@ -1,4 +1,4 @@
-package com.attornatus.avaliacaodesenvolvedor.models.form;
+package com.attornatus.avaliacaodesenvolvedor.controllers.form;
 
 import com.attornatus.avaliacaodesenvolvedor.models.Pessoa;
 import com.attornatus.avaliacaodesenvolvedor.repositories.PessoaRepository;

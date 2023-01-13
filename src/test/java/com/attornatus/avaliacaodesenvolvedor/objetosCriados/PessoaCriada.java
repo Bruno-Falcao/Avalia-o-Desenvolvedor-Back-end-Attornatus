@@ -2,7 +2,7 @@ package com.attornatus.avaliacaodesenvolvedor.objetosCriados;
 
 import com.attornatus.avaliacaodesenvolvedor.models.Endereco;
 import com.attornatus.avaliacaodesenvolvedor.models.Pessoa;
-import com.attornatus.avaliacaodesenvolvedor.models.form.PessoaForm;
+import com.attornatus.avaliacaodesenvolvedor.controllers.form.PessoaForm;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ public class PessoaCriada {
         novaPessoa.setDataDeNascimento("22-10-1811");
 
         List<Endereco> enderecos = List.of(new EnderecoCriado().criaEnderecoPrimario(),
-                new EnderecoCriado().criaEnderecoPrimario());
+                new EnderecoCriado().criaEnderecoSecundario());
 
         novaPessoa.setEndereco(enderecos);
 
@@ -27,7 +27,7 @@ public class PessoaCriada {
         novaPessoa.setDataDeNascimento("01-03-1810");
 
         List<Endereco> enderecos = List.of(new EnderecoCriado().criaEnderecoPrimario(),
-                new EnderecoCriado().criaEnderecoPrimario());
+                new EnderecoCriado().criaEnderecoSecundario());
 
         enderecos.get(0).setEnderecoPrincipal(false);
         enderecos.get(1).setEnderecoPrincipal(true);

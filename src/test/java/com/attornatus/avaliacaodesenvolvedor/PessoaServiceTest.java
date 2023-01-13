@@ -3,10 +3,9 @@ package com.attornatus.avaliacaodesenvolvedor;
 import com.attornatus.avaliacaodesenvolvedor.exceptions.NotFoundException;
 import com.attornatus.avaliacaodesenvolvedor.models.Endereco;
 import com.attornatus.avaliacaodesenvolvedor.models.Pessoa;
-import com.attornatus.avaliacaodesenvolvedor.models.form.PessoaForm;
+import com.attornatus.avaliacaodesenvolvedor.controllers.form.PessoaForm;
 import com.attornatus.avaliacaodesenvolvedor.objetosCriados.EnderecoCriado;
 import com.attornatus.avaliacaodesenvolvedor.objetosCriados.PessoaCriada;
-import com.attornatus.avaliacaodesenvolvedor.repositories.EnderecoRepository;
 import com.attornatus.avaliacaodesenvolvedor.repositories.PessoaRepository;
 import com.attornatus.avaliacaodesenvolvedor.services.PessoaService;
 import org.junit.jupiter.api.Assertions;
@@ -22,7 +21,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.when;
+
 
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
@@ -37,7 +37,7 @@ public class PessoaServiceTest {
     public void testaSePessoaEstaSendoCriadaSucesso() {
         Pessoa novaPessoa = PessoaCriada.criaObjetoPessoaPrimaria();
 
-        lenient().when(pessoaRepository.save(novaPessoa)).thenReturn(novaPessoa);
+        when(pessoaRepository.save(novaPessoa)).thenReturn(novaPessoa);
 
         Assertions.assertEquals(pessoaService.criacaoPessoa(novaPessoa),
                 "Nova pessoa criada com sucesso");
@@ -47,7 +47,7 @@ public class PessoaServiceTest {
     public void testaSePessoaEstaSendoCriadaErro() {
         Pessoa novaPessoa = PessoaCriada.criaObjetoPessoaPrimaria();
 
-        lenient().when(pessoaRepository.save(novaPessoa)).thenReturn(novaPessoa);
+        when(pessoaRepository.save(novaPessoa)).thenReturn(novaPessoa);
         novaPessoa.setId(1L);
 
         Assertions.assertEquals(pessoaService.criacaoPessoa(novaPessoa),
@@ -61,8 +61,8 @@ public class PessoaServiceTest {
         PessoaForm pessoaForm = PessoaCriada.criaPessoaForm();
         pessoaForm.setId(1L);
 
-        lenient().when(pessoaRepository.findById(pessoaForm.getId())).thenReturn(Optional.of(novaPessoa));
-        lenient().when(pessoaRepository.getReferenceById(novaPessoa.getId())).thenReturn(novaPessoa);
+        when(pessoaRepository.findById(pessoaForm.getId())).thenReturn(Optional.of(novaPessoa));
+        when(pessoaRepository.getReferenceById(novaPessoa.getId())).thenReturn(novaPessoa);
 
         Assertions.assertEquals(pessoaService.alteraPessoa(pessoaForm), "Pessoa alterada com sucesso");
     }
@@ -74,7 +74,7 @@ public class PessoaServiceTest {
         PessoaForm pessoaForm = PessoaCriada.criaPessoaForm();
         pessoaForm.setId(1L);
 
-        lenient().when(pessoaRepository.findById(null)).thenReturn(null);
+        when(pessoaRepository.findById(null)).thenReturn(null);
 
         Assertions.assertThrows(NotFoundException.class, () -> pessoaService.alteraPessoa(pessoaForm));
     }
@@ -83,10 +83,10 @@ public class PessoaServiceTest {
     public void testaSeFindByIdRetornPessoaErro() {
         Pessoa pessoaEncontrada = PessoaCriada.criaObjetoPessoaPrimaria();
 
-        lenient().when(pessoaRepository.findById(pessoaEncontrada.getId())).thenReturn(Optional.of(pessoaEncontrada));
+        when(pessoaRepository.findById(pessoaEncontrada.getId())).thenReturn(Optional.of(pessoaEncontrada));
 
         Assertions.assertThrows(NotFoundException.class
-                , () -> pessoaService.buscaPessoaById(1L));
+                , () -> pessoaService.buscaPorId(1L));
     }
 
     @Test
@@ -94,7 +94,7 @@ public class PessoaServiceTest {
         List<Pessoa> pessoas = List.of(PessoaCriada.criaObjetoPessoaPrimaria(),
                 PessoaCriada.criaObjetoPessoaSencundaria());
 
-        lenient().when(pessoaRepository.findAll()).thenReturn(pessoas);
+        when(pessoaRepository.findAll()).thenReturn(pessoas);
         List<Pessoa> pessoasEncontradas = pessoaService.buscaTodasAsPessoas();
 
         Assertions.assertEquals(pessoasEncontradas, pessoas);
@@ -103,7 +103,7 @@ public class PessoaServiceTest {
     @Test
     public void testaSeBucaTodasAsPessoasErro() {
 
-        lenient().when(pessoaRepository.findAll()).thenReturn(Collections.emptyList());
+        when(pessoaRepository.findAll()).thenReturn(Collections.emptyList());
 
         Assertions.assertThrows(NotFoundException.class
                 , () -> pessoaService.buscaTodasAsPessoas());
@@ -114,7 +114,7 @@ public class PessoaServiceTest {
         Pessoa pessoaEncontrada = PessoaCriada.criaObjetoPessoaPrimaria();
         pessoaEncontrada.setId(1L);
 
-        lenient().when(pessoaRepository.findById(pessoaEncontrada.getId())).thenReturn(Optional.of(pessoaEncontrada));
+        when(pessoaRepository.findById(pessoaEncontrada.getId())).thenReturn(Optional.of(pessoaEncontrada));
 
         List<Endereco> enderecos = pessoaService.buscaPessoaEndereco(1L);
 
@@ -126,7 +126,7 @@ public class PessoaServiceTest {
         Pessoa pessoaEncontrada = PessoaCriada.criaObjetoPessoaPrimaria();
         pessoaEncontrada.setId(1L);
 
-        lenient().when(pessoaRepository.findById(pessoaEncontrada.getId())).thenReturn(Optional.of(pessoaEncontrada));
+        when(pessoaRepository.findById(pessoaEncontrada.getId())).thenReturn(Optional.of(pessoaEncontrada));
 
         Assertions.assertThrows(NotFoundException.class
                 , () -> pessoaService.buscaPessoaEndereco(2L));
@@ -141,7 +141,7 @@ public class PessoaServiceTest {
         pessoaEncontrada.setId(1L);
         pessoaEncontrada.setEndereco(enderecos);
 
-        lenient().when(pessoaRepository.findById(pessoaEncontrada.getId())).thenReturn(Optional.of(pessoaEncontrada));
+        when(pessoaRepository.findById(pessoaEncontrada.getId())).thenReturn(Optional.of(pessoaEncontrada));
 
         Assertions.assertEquals(pessoaService.defineEnderecoPrincipal(1L, 3L)
                 , "Endereço principal alterado");
@@ -156,7 +156,7 @@ public class PessoaServiceTest {
         pessoaEncontrada.setId(1L);
         pessoaEncontrada.setEndereco(enderecos);
 
-        lenient().when(pessoaRepository.findById(pessoaEncontrada.getId())).thenReturn(Optional.of(pessoaEncontrada));
+        when(pessoaRepository.findById(pessoaEncontrada.getId())).thenReturn(Optional.of(pessoaEncontrada));
 
 
         Assertions.assertEquals(pessoaService.defineEnderecoPrincipal(1L, 4L),

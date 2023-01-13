@@ -7,7 +7,8 @@ import com.attornatus.avaliacaodesenvolvedor.repositories.PessoaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+
+import static com.attornatus.avaliacaodesenvolvedor.utils.PessoaUtils.buscaPessoaById;
 
 @Service
 public class EnderecoService {
@@ -20,8 +21,15 @@ public class EnderecoService {
         this.pessoaRepository = pessoaRepository;
     }
 
+    /**
+     * O metodo busca se a pessou passada por parâmetro existe depois adiciona o Endereco recebido na lista
+     * de Endereco da Pessoa
+     * @param id
+     * @param endereco
+     * @return
+     */
     public String criaEndereco(Long id, Endereco endereco) {
-        Pessoa pessoa = pessoaRepository.findById(id).get();
+        Pessoa pessoa = buscaPessoaById(id, pessoaRepository).get();
         pessoa.getEndereco().add(endereco);
         pessoaRepository.save(pessoa);
 
