@@ -66,11 +66,14 @@ public class PessoaController {
                         .body(ResponseAPI.getInstance(Collections
                                 .singletonList(pessoaService.buscaPorId(id))));
             }
-            return ResponseEntity.ok().body(pessoaService.buscaTodasAsPessoas());
+            return ResponseEntity.ok()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(ResponseAPI.getInstance(Collections
+                            .singletonList(pessoaService.buscaTodasAsPessoas())));
 
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(ResponseAPI.getInstance(String.format("Erro encontrar pessoa", ex.getMessage()),
+                    .body(ResponseAPI.getInstance(String.format("Erro ao encontrar pessoa", ex.getMessage()),
                             Arrays.stream(ex.getSuppressed()).map(Throwable::getMessage)
                                     .toArray(String[]::new)));
         }

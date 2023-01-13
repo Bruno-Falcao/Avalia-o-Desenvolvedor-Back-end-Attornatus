@@ -14,6 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Arrays;
@@ -34,7 +35,7 @@ public class PessoaServiceTest {
     private PessoaService pessoaService;
 
     @Test
-    public void testaSePessoaEstaSendoCriadaSucesso() {
+    public void testaSePessoaEstaSendoCriadaSucesso() throws Exception {
         Pessoa novaPessoa = PessoaCriada.criaObjetoPessoaPrimaria();
 
         when(pessoaRepository.save(novaPessoa)).thenReturn(novaPessoa);
@@ -44,14 +45,14 @@ public class PessoaServiceTest {
     }
 
     @Test
-    public void testaSePessoaEstaSendoCriadaErro() {
+    public void testaSePessoaEstaSendoCriadaErro() throws Exception {
         Pessoa novaPessoa = PessoaCriada.criaObjetoPessoaPrimaria();
 
         when(pessoaRepository.save(novaPessoa)).thenReturn(novaPessoa);
         novaPessoa.setId(1L);
 
-        Assertions.assertEquals(pessoaService.criacaoPessoa(novaPessoa),
-                "Não foi possível salvar a pessoa");
+        Assertions.assertThrows(Exception.class,
+                () -> pessoaService.criacaoPessoa(novaPessoa));
     }
 
     @Test
@@ -90,18 +91,19 @@ public class PessoaServiceTest {
     }
 
     @Test
-    public void testaSeBucaTodasAsPessoasSucesso() {
+    public void testaSeBuscaTodasAsPessoasSucesso() {
         List<Pessoa> pessoas = List.of(PessoaCriada.criaObjetoPessoaPrimaria(),
                 PessoaCriada.criaObjetoPessoaSencundaria());
 
         when(pessoaRepository.findAll()).thenReturn(pessoas);
+
         List<Pessoa> pessoasEncontradas = pessoaService.buscaTodasAsPessoas();
 
         Assertions.assertEquals(pessoasEncontradas, pessoas);
     }
 
     @Test
-    public void testaSeBucaTodasAsPessoasErro() {
+    public void testaSeBuscaTodasAsPessoasErro() {
 
         when(pessoaRepository.findAll()).thenReturn(Collections.emptyList());
 
@@ -133,7 +135,7 @@ public class PessoaServiceTest {
     }
 
     @Test
-    public void testaSeDefineEnderecoPricipalAlteraEnderecosCorretamenteSucesso() {
+    public void testaSeDefineEnderecoPricipalAlteraEnderecosCorretamenteSucesso() throws Exception {
         Pessoa pessoaEncontrada = PessoaCriada.criaObjetoPessoaPrimaria();
         List<Endereco> enderecos = Arrays.asList(new EnderecoCriado().criaEnderecoPrimario(),
                 new EnderecoCriado().criaEnderecoSecundario(), new EnderecoCriado().criaEnderecoTerciario());
@@ -148,7 +150,7 @@ public class PessoaServiceTest {
     }
 
     @Test
-    public void testaSeDefineEnderecoPricipalAlteraEnderecosCorretamenteErro() {
+    public void testaSeDefineEnderecoPricipalAlteraEnderecosCorretamenteErro() throws Exception {
         Pessoa pessoaEncontrada = PessoaCriada.criaObjetoPessoaPrimaria();
         List<Endereco> enderecos = Arrays.asList(new EnderecoCriado().criaEnderecoPrimario(),
                 new EnderecoCriado().criaEnderecoSecundario(), new EnderecoCriado().criaEnderecoTerciario());
@@ -158,8 +160,7 @@ public class PessoaServiceTest {
 
         when(pessoaRepository.findById(pessoaEncontrada.getId())).thenReturn(Optional.of(pessoaEncontrada));
 
-
-        Assertions.assertEquals(pessoaService.defineEnderecoPrincipal(1L, 4L),
-                "Endereço informado não existe ou não pertence a essa Pessoa");
+        Assertions.assertThrows(Exception.class,
+                () -> pessoaService.defineEnderecoPrincipal(1L, 4L));
     }
 }

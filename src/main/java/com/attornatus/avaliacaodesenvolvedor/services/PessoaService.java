@@ -1,9 +1,9 @@
 package com.attornatus.avaliacaodesenvolvedor.services;
 
+import com.attornatus.avaliacaodesenvolvedor.controllers.form.PessoaForm;
 import com.attornatus.avaliacaodesenvolvedor.exceptions.NotFoundException;
 import com.attornatus.avaliacaodesenvolvedor.models.Endereco;
 import com.attornatus.avaliacaodesenvolvedor.models.Pessoa;
-import com.attornatus.avaliacaodesenvolvedor.controllers.form.PessoaForm;
 import com.attornatus.avaliacaodesenvolvedor.repositories.PessoaRepository;
 import org.springframework.stereotype.Service;
 
@@ -27,13 +27,13 @@ public class PessoaService {
      * @param pessoa
      * @return
      */
-    public String criacaoPessoa(Pessoa pessoa) {
+    public String criacaoPessoa(Pessoa pessoa) throws Exception {
         if (pessoa.getId() == null) {
             Pessoa novaPessoa = pessoaRepository.save(pessoa);
             return "Nova pessoa criada com sucesso";
         }
 
-        return "Não foi possível salvar a pessoa";
+        throw new Exception("Não foi possível salvar a pessoa");
     }
 
     /**
@@ -80,7 +80,7 @@ public class PessoaService {
      * @param idEndereco
      * @return
      */
-    public String defineEnderecoPrincipal(Long id, Long idEndereco) {
+    public String defineEnderecoPrincipal(Long id, Long idEndereco) throws Exception {
         Pessoa pessoa = buscaPessoaById(id, pessoaRepository).get();
 
         pessoa.getEndereco().forEach(c -> c.setEnderecoPrincipal(false));
@@ -93,6 +93,6 @@ public class PessoaService {
             return "Endereço principal alterado";
         }
 
-        return "Endereço informado não existe ou não pertence a essa Pessoa";
+        throw new Exception("Endereço informado não existe ou não pertence a essa Pessoa");
     }
 }
