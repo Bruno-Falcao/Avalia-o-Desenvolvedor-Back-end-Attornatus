@@ -1,9 +1,9 @@
 package com.attornatus.avaliacaodesenvolvedor;
 
+import com.attornatus.avaliacaodesenvolvedor.controllers.form.PessoaForm;
 import com.attornatus.avaliacaodesenvolvedor.exceptions.NotFoundException;
 import com.attornatus.avaliacaodesenvolvedor.models.Endereco;
 import com.attornatus.avaliacaodesenvolvedor.models.Pessoa;
-import com.attornatus.avaliacaodesenvolvedor.controllers.form.PessoaForm;
 import com.attornatus.avaliacaodesenvolvedor.objetosCriados.EnderecoCriado;
 import com.attornatus.avaliacaodesenvolvedor.objetosCriados.PessoaCriada;
 import com.attornatus.avaliacaodesenvolvedor.repositories.PessoaRepository;
@@ -14,7 +14,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Arrays;
